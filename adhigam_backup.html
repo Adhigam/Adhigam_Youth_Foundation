@@ -19,75 +19,6 @@
         </div>
         <div class="admin-content">
             <div class="admin-section">
-                <h4>Section Visibility Control</h4>
-                <div class="admin-form">
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleAbout" checked onchange="toggleSection('about')">
-                            <span class="toggle-label">About Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="togglePrograms" checked onchange="toggleSection('programs')">
-                            <span class="toggle-label">Programs Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleEvents" checked onchange="toggleSection('events')">
-                            <span class="toggle-label">Events Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleGallery" checked onchange="toggleSection('gallery')">
-                            <span class="toggle-label">Gallery Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleImpact" checked onchange="toggleSection('impact')">
-                            <span class="toggle-label">Impact Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleTestimonials" checked onchange="toggleSection('testimonials')">
-                            <span class="toggle-label">Testimonials Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleNews" checked onchange="toggleSection('news')">
-                            <span class="toggle-label">News Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleVolunteer" checked onchange="toggleSection('volunteer')">
-                            <span class="toggle-label">Volunteer Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleDonate" checked onchange="toggleSection('donate')">
-                            <span class="toggle-label">Donation Section</span>
-                        </label>
-                    </div>
-                    <div class="section-toggle">
-                        <label>
-                            <input type="checkbox" id="toggleContact" checked onchange="toggleSection('contact')">
-                            <span class="toggle-label">Contact Section</span>
-                        </label>
-                    </div>
-                    <button onclick="saveSectionPreferences()" class="btn-save">
-                        <i class="fas fa-save"></i> Save Preferences
-                    </button>
-                </div>
-            </div>
-            
-            <div class="admin-section">
                 <h4>Quick Updates</h4>
                 <div class="admin-form">
                     <label>Update Impact Numbers:</label>
@@ -116,8 +47,9 @@
                     <textarea id="testimonialText" placeholder="Testimonial Text"></textarea>
                     <button onclick="addTestimonial()">Add Testimonial</button>
                 </div>
-            </div></div>
+            </div>
         </div>
+    </div>
 
     <!-- Admin Access Button -->
     <button id="adminAccess" class="admin-access-btn" onclick="toggleAdminPanel()">
