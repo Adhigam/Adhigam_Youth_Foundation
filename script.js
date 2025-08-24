@@ -1,8 +1,7 @@
 // DOM Content Loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize all functionality
     initSlider();
-    initMobileNav();
     initSmoothScrolling();
     initScrollAnimations();
     initDonationForm();
@@ -11,6 +10,40 @@ document.addEventListener('DOMContentLoaded', function() {
     initSliderWithMedia();
     loadSectionPreferences();
 });
+
+function openDonateDialog(e) {
+    e.preventDefault();
+    document.getElementById('donateDialog').style.display = 'block';
+}
+
+function closeDonateDialog() {
+    document.getElementById('donateDialog').style.display = 'none';
+}
+
+// Optional: Close dialog when clicking outside modal-content
+window.onclick = function (event) {
+    var modal = document.getElementById('donateDialog');
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}
+
+function openStory(id) {
+    document.getElementById(id).style.display = "block";
+}
+
+function closeStory(id) {
+    document.getElementById(id).style.display = "none";
+}
+
+// Close modal when clicking outside
+window.onclick = function (event) {
+    document.querySelectorAll('.modal').forEach(modal => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+}
 
 // Hero Slider Functionality
 function initSlider() {
@@ -34,7 +67,7 @@ function initSlider() {
     function showSlide(index) {
         slides.forEach(slide => slide.classList.remove('active'));
         dotElements.forEach(dot => dot.classList.remove('active'));
-        
+
         slides[index].classList.add('active');
         dotElements[index].classList.add('active');
     }
@@ -68,46 +101,16 @@ function initSlider() {
     });
 }
 
-// Mobile Navigation
-function initMobileNav() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    const navLinks = document.querySelectorAll('.nav-menu a');
-
-    if (hamburger) {
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-    }
-
-    // Close mobile menu when clicking on a link
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        });
-    });
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        }
-    });
-}
-
 // Smooth Scrolling for Navigation Links
 function initSmoothScrolling() {
     const navLinks = document.querySelectorAll('a[href^="#"]');
-    
+
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = link.getAttribute('href');
             const targetSection = document.querySelector(targetId);
-            
+
             if (targetSection) {
                 const offsetTop = targetSection.offsetTop - 80; // Account for fixed navbar
                 window.scrollTo({
@@ -169,7 +172,7 @@ function saveDonationRecord(donationData, paymentResponse) {
 
     donationRecords.push(donationRecord);
     localStorage.setItem('donationRecords', JSON.stringify(donationRecords));
-    
+
     updateDonationStats();
     return donationRecord;
 }
@@ -181,13 +184,13 @@ function generateDonationId() {
 function updateDonationStats() {
     const totalDonations = donationRecords.length;
     const totalAmount = donationRecords.reduce((sum, record) => sum + record.donation.amount, 0);
-    
+
     // Update stats in the donation section
     const statsContainer = document.querySelector('.impact-stats');
     if (statsContainer) {
         const totalDonorsElement = statsContainer.querySelector('.stat:nth-child(1) h4');
         const totalAmountElement = statsContainer.querySelector('.stat:nth-child(2) h4');
-        
+
         if (totalDonorsElement) totalDonorsElement.textContent = totalDonations;
         if (totalAmountElement) totalAmountElement.textContent = '₹' + totalAmount.toLocaleString();
     }
@@ -196,7 +199,7 @@ function updateDonationStats() {
 // Enhanced donation form handling
 function handleDonation(e) {
     e.preventDefault();
-    
+
     const formData = new FormData(e.target);
     const donationData = {
         name: formData.get('name'),
@@ -226,7 +229,7 @@ function handleDonation(e) {
                 description: `Donation for ${donationData.purpose}`,
                 image: 'Adhigam_Logo.jpg',
                 order_id: order.id,
-                handler: function(response) {
+                handler: function (response) {
                     handlePaymentSuccess(response, donationData);
                 },
                 prefill: {
@@ -304,14 +307,14 @@ function showDonationReceipt(donationRecord) {
             </div>
         </div>
     `;
-    
+
     document.body.insertAdjacentHTML('beforeend', receipt);
 }
 
 function downloadReceipt(donationId) {
     const record = donationRecords.find(r => r.id === donationId);
     if (!record) return;
-    
+
     const receiptText = `
         ADHIGAM YOUTH FOUNDATION
         DONATION RECEIPT
@@ -341,7 +344,7 @@ function downloadReceipt(donationId) {
         
         For any queries, contact: info@adhigam.org
     `;
-    
+
     const blob = new Blob([receiptText], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -410,7 +413,7 @@ function showDonationHistory() {
             </div>
         </div>
     `;
-    
+
     document.body.insertAdjacentHTML('beforeend', historyHTML);
 }
 
@@ -425,7 +428,7 @@ function getMonthlyTotal() {
     const now = new Date();
     const thisMonth = now.getMonth();
     const thisYear = now.getFullYear();
-    
+
     return donationRecords
         .filter(record => {
             const recordDate = new Date(record.timestamp);
@@ -448,7 +451,7 @@ function exportDonationData() {
             record.status
         ])
     ].map(row => row.join(',')).join('\n');
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -456,20 +459,20 @@ function exportDonationData() {
     a.download = `donation_records_${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
-    
+
     showNotification('Donation data exported successfully!', 'success');
 }
 
 // Gallery Lightbox
 function initGalleryLightbox() {
     const galleryItems = document.querySelectorAll('.gallery-item');
-    
+
     galleryItems.forEach(item => {
         item.addEventListener('click', () => {
             const img = item.querySelector('img');
             const title = item.querySelector('h3')?.textContent || '';
             const description = item.querySelector('p')?.textContent || '';
-            
+
             openLightbox(img.src, title, description);
         });
     });
@@ -489,7 +492,7 @@ function openLightbox(imageSrc, title, description) {
             </div>
         </div>
     `;
-    
+
     // Add styles
     lightbox.style.cssText = `
         position: fixed;
@@ -505,7 +508,7 @@ function openLightbox(imageSrc, title, description) {
         opacity: 0;
         transition: opacity 0.3s ease;
     `;
-    
+
     const content = lightbox.querySelector('.lightbox-content');
     content.style.cssText = `
         position: relative;
@@ -513,14 +516,14 @@ function openLightbox(imageSrc, title, description) {
         max-height: 90%;
         text-align: center;
     `;
-    
+
     const img = lightbox.querySelector('img');
     img.style.cssText = `
         max-width: 100%;
         max-height: 70vh;
         border-radius: 10px;
     `;
-    
+
     const closeBtn = lightbox.querySelector('.lightbox-close');
     closeBtn.style.cssText = `
         position: absolute;
@@ -532,21 +535,21 @@ function openLightbox(imageSrc, title, description) {
         background: none;
         border: none;
     `;
-    
+
     const info = lightbox.querySelector('.lightbox-info');
     info.style.cssText = `
         color: white;
         margin-top: 1rem;
     `;
-    
+
     // Add to DOM
     document.body.appendChild(lightbox);
-    
+
     // Animate in
     setTimeout(() => {
         lightbox.style.opacity = '1';
     }, 10);
-    
+
     // Close functionality
     function closeLightbox() {
         lightbox.style.opacity = '0';
@@ -554,12 +557,12 @@ function openLightbox(imageSrc, title, description) {
             document.body.removeChild(lightbox);
         }, 300);
     }
-    
+
     closeBtn.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox) closeLightbox();
     });
-    
+
     // ESC key to close
     document.addEventListener('keydown', function escHandler(e) {
         if (e.key === 'Escape') {
@@ -574,7 +577,7 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
-    
+
     notification.style.cssText = `
         position: fixed;
         top: 20px;
@@ -589,13 +592,13 @@ function showNotification(message, type = 'info') {
         max-width: 300px;
         background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#136a8a'};
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
     }, 10);
-    
+
     setTimeout(() => {
         notification.style.transform = 'translateX(100%)';
         setTimeout(() => {
@@ -623,7 +626,7 @@ function toggleAdminPanel() {
 function toggleSection(sectionName) {
     const section = document.getElementById(sectionName);
     const checkbox = document.getElementById(`toggle${sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}`);
-    
+
     if (section && checkbox) {
         if (checkbox.checked) {
             section.classList.remove('section-hidden');
@@ -636,14 +639,14 @@ function toggleSection(sectionName) {
 function saveSectionPreferences() {
     const sections = ['about', 'programs', 'events', 'gallery', 'impact', 'testimonials', 'news', 'volunteer', 'donate', 'contact'];
     const preferences = {};
-    
+
     sections.forEach(section => {
         const checkbox = document.getElementById(`toggle${section.charAt(0).toUpperCase() + section.slice(1)}`);
         if (checkbox) {
             preferences[section] = checkbox.checked;
         }
     });
-    
+
     localStorage.setItem('sectionPreferences', JSON.stringify(preferences));
     showNotification('Section preferences saved successfully!', 'success');
 }
@@ -654,7 +657,7 @@ function loadSectionPreferences() {
         Object.keys(preferences).forEach(section => {
             const checkbox = document.getElementById(`toggle${section.charAt(0).toUpperCase() + section.slice(1)}`);
             const sectionElement = document.getElementById(section);
-            
+
             if (checkbox && sectionElement) {
                 checkbox.checked = preferences[section];
                 if (!preferences[section]) {
@@ -671,7 +674,7 @@ function updateImpactStats() {
     const childrenCount = document.getElementById('childrenCount').value;
     const sessionsCount = document.getElementById('sessionsCount').value;
     const programsCount = document.getElementById('programsCount').value;
-    
+
     if (childrenCount) {
         document.querySelector('.counter[data-target="500"]').textContent = childrenCount;
         document.querySelector('.counter[data-target="500"]').setAttribute('data-target', childrenCount);
@@ -684,9 +687,9 @@ function updateImpactStats() {
         document.querySelector('.counter[data-target="3"]').textContent = programsCount;
         document.querySelector('.counter[data-target="3"]').setAttribute('data-target', programsCount);
     }
-    
+
     showNotification('Impact statistics updated successfully!', 'success');
-    
+
     // Clear form
     document.getElementById('childrenCount').value = '';
     document.getElementById('sessionsCount').value = '';
@@ -699,16 +702,16 @@ function addNewEvent() {
     const time = document.getElementById('eventTime').value;
     const location = document.getElementById('eventLocation').value;
     const description = document.getElementById('eventDescription').value;
-    
+
     if (!title || !date || !time || !location || !description) {
         showNotification('Please fill in all fields', 'error');
         return;
     }
-    
+
     const eventDate = new Date(date);
     const day = eventDate.getDate();
     const month = eventDate.toLocaleString('default', { month: 'short' });
-    
+
     const newEvent = `
         <div class="event-card">
             <div class="event-date">
@@ -724,12 +727,12 @@ function addNewEvent() {
             </div>
         </div>
     `;
-    
+
     const eventsContainer = document.getElementById('eventsContainer');
     eventsContainer.insertAdjacentHTML('afterbegin', newEvent);
-    
+
     showNotification('New event added successfully!', 'success');
-    
+
     // Clear form
     document.getElementById('eventTitle').value = '';
     document.getElementById('eventDate').value = '';
@@ -742,12 +745,12 @@ function addTestimonial() {
     const name = document.getElementById('testimonialName').value;
     const role = document.getElementById('testimonialRole').value;
     const text = document.getElementById('testimonialText').value;
-    
+
     if (!name || !role || !text) {
         showNotification('Please fill in all fields', 'error');
         return;
     }
-    
+
     const newTestimonial = `
         <div class="testimonial-card">
             <div class="testimonial-content">
@@ -763,12 +766,12 @@ function addTestimonial() {
             </div>
         </div>
     `;
-    
+
     const testimonialsContainer = document.getElementById('testimonialsContainer');
     testimonialsContainer.insertAdjacentHTML('beforeend', newTestimonial);
-    
+
     showNotification('New testimonial added successfully!', 'success');
-    
+
     // Clear form
     document.getElementById('testimonialName').value = '';
     document.getElementById('testimonialRole').value = '';
@@ -776,12 +779,12 @@ function addTestimonial() {
 }
 
 // Volunteer form handling
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const volunteerForm = document.getElementById('volunteerForm');
     if (volunteerForm) {
-        volunteerForm.addEventListener('submit', function(e) {
+        volunteerForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const formData = new FormData(this);
             const volunteerData = {
                 name: formData.get('name'),
@@ -793,25 +796,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 experience: formData.get('experience'),
                 motivation: formData.get('motivation')
             };
-            
+
             // Validate form
-            if (!volunteerData.name || !volunteerData.email || !volunteerData.phone || 
+            if (!volunteerData.name || !volunteerData.email || !volunteerData.phone ||
                 !volunteerData.age || !volunteerData.role || !volunteerData.availability) {
                 showNotification('Please fill in all required fields', 'error');
                 return;
             }
-            
+
             if (volunteerData.age < 18) {
                 showNotification('You must be at least 18 years old to volunteer', 'error');
                 return;
             }
-            
+
             // Show success message
             showNotification('Thank you for your volunteer application! We will contact you soon.', 'success');
-            
+
             // Reset form
             this.reset();
-            
+
             // In a real application, you would send this data to your server
             console.log('Volunteer application:', volunteerData);
         });
@@ -821,12 +824,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // Counter animation for impact stats
 function animateCounters() {
     const counters = document.querySelectorAll('.counter');
-    
+
     counters.forEach(counter => {
         const target = parseInt(counter.getAttribute('data-target'));
         const increment = target / 100;
         let current = 0;
-        
+
         const updateCounter = () => {
             if (current < target) {
                 current += increment;
@@ -836,7 +839,7 @@ function animateCounters() {
                 counter.textContent = target;
             }
         };
-        
+
         updateCounter();
     });
 }
@@ -871,9 +874,13 @@ window.addEventListener('scroll', () => {
 // Event registration functionality
 document.querySelectorAll('.btn-register').forEach(btn => {
     btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const eventTitle = e.target.closest('.event-card').querySelector('h3').textContent;
-        showNotification(`Registration for "${eventTitle}" will be available soon!`, 'info');
+        // Only prevent default if it's a button, not an <a> tag
+        if (btn.tagName === 'BUTTON') {
+            e.preventDefault();
+            const eventTitle = e.target.closest('.event-card').querySelector('h3').textContent;
+            showNotification(`Registration for "${eventTitle}" will be available soon!`, 'info');
+        }
+        // If it's an <a>, let it work as a normal link
     });
 });
 
@@ -922,7 +929,7 @@ function initSliderWithMedia() {
     // Define media folder path and image extensions
     const mediaFolder = 'media/';
     const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-    
+
     // Function to check if image exists
     function checkImageExists(url) {
         return new Promise((resolve) => {
@@ -932,11 +939,11 @@ function initSliderWithMedia() {
             img.src = url;
         });
     }
-    
+
     // Function to load images from media folder
     async function loadMediaImages() {
         const mediaImages = [];
-        
+
         // Try to load images from media folder
         for (let i = 1; i <= 10; i++) { // Check up to 10 images
             for (const ext of imageExtensions) {
@@ -948,10 +955,10 @@ function initSliderWithMedia() {
                 }
             }
         }
-        
+
         return mediaImages;
     }
-    
+
     // Update slider with media images if available
     loadMediaImages().then(mediaImages => {
         if (mediaImages.length > 0) {
@@ -963,7 +970,7 @@ function initSliderWithMedia() {
 // Function to update slider with new images
 function updateSliderWithImages(imagePaths) {
     const slides = document.querySelectorAll('.slide');
-    
+
     imagePaths.forEach((imagePath, index) => {
         if (slides[index]) {
             const slideBg = slides[index].querySelector('.slide-bg');
@@ -972,6 +979,43 @@ function updateSliderWithImages(imagePaths) {
             }
         }
     });
-    
+
     console.log(`Updated slider with ${imagePaths.length} images from media folder`);
-} 
+}
+
+// Responsive Nav Script (ensure this is only present once)
+document.addEventListener('DOMContentLoaded', function () {
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('mainNavMenu');
+    const navOverlay = document.getElementById('navOverlay');
+    // Toggle nav menu
+    navToggle && navToggle.addEventListener('click', function () {
+        const expanded = navMenu.classList.toggle('open');
+        navOverlay.classList.toggle('active', expanded);
+        navToggle.setAttribute('aria-expanded', expanded);
+    });
+    // Close nav on overlay click
+    navOverlay && navOverlay.addEventListener('click', function () {
+        navMenu.classList.remove('open');
+        navOverlay.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+    });
+    // Close nav on link click (mobile)
+    navMenu && navMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function () {
+            if (window.innerWidth <= 900) {
+                navMenu.classList.remove('open');
+                navOverlay.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    });
+    // Optional: Close nav on resize to desktop
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 900) {
+            navMenu.classList.remove('open');
+            navOverlay.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+});
