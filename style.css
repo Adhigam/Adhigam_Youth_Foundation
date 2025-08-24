@@ -49,8 +49,13 @@ body {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Navigation */
@@ -592,6 +597,7 @@ body {
     gap: 30px;
     justify-content: center;
     align-items: stretch;
+    margin-top: 40px;
     flex-wrap: wrap;
 }
 
@@ -601,7 +607,8 @@ body {
     justify-content: flex-start;
     position: relative;
     height: 100%;
-    min-height: 420px;
+    min-height: 480px;
+    /* Increased for uniformity */
     max-width: 500px;
     width: 100%;
     box-sizing: border-box;
@@ -609,6 +616,8 @@ body {
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     margin-bottom: 0;
+    /* Add a fixed height for uniformity on desktop */
+    height: 480px;
 }
 
 .profile-passport {
@@ -635,6 +644,9 @@ body {
     flex: 1 1 auto;
     padding: 1.5rem;
     padding-top: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .story-content h4 {
@@ -647,6 +659,7 @@ body {
     font-size: 14px;
     margin: 12px 0;
     color: #333;
+    flex: 1 1 auto;
 }
 
 .story-actions {
@@ -1354,6 +1367,7 @@ body {
         opacity: 0;
         transform: translateY(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1455,6 +1469,8 @@ body {
     .story-card {
         min-height: 420px;
         max-width: 100%;
+        height: 420px;
+        /* Keep uniform height on tablet */
     }
 }
 
@@ -1544,6 +1560,8 @@ body {
 
     .story-card {
         min-height: 380px;
+        height: 380px;
+        /* Uniform height on mobile */
     }
 
     .profile-passport {
