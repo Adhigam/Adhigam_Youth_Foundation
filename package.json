@@ -1,0 +1,7 @@
+{
+  "name": "adhigam",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd adhigam-react && npm install && npm run build"
+  }
+}
