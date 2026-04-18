@@ -1,5 +1,5 @@
 {
-  "outputDirectory": "adhigam-react/dist",
+  "outputDirectory": "dist",
   "framework": "vite",
   "cleanUrls": true,
   "rewrites": [
